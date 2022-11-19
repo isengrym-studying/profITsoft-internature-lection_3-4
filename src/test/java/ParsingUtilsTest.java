@@ -1,10 +1,12 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ua.klieshchunov.XmlParser;
+import ua.klieshchunov.ParsingUtils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-public class XmlParserTest {
+public class ParsingUtilsTest {
     @Test
     public void testCombineNameAndSurname() throws IOException {
         String inputPath = "src/main/resources/persons";
@@ -42,7 +44,7 @@ public class XmlParserTest {
             out.write(fileTextBefore);
         }
 
-        XmlParser.combineNameAndSurname(inputPath, outputPath);
+        ParsingUtils.combineNameAndSurnameXml(inputPath, outputPath);
 
         try(BufferedReader br = new BufferedReader(new FileReader(outputPath))) {
             StringBuilder actualFileTextSB = new StringBuilder();
@@ -54,5 +56,33 @@ public class XmlParserTest {
             String actualFileText = actualFileTextSB.toString();
             Assertions.assertEquals(expectedFileText, actualFileText);
         }
+    }
+
+    @Test
+    public void testGenerateLawViolationsStatistic() throws IOException {
+        String inputPath = "src/main/resources/lawViolations";
+        String outputPath = "src/main/resources/lawViolations/statistics.xml";
+
+        ParsingUtils.generateLawViolationStatistics(inputPath, outputPath);
+
+        String actual = Files.readString(Paths.get(outputPath));
+        String expected = """
+                <lawViolations>
+                  <items>
+                    <ALCOHOL_INTOXICATION>17000.0</ALCOHOL_INTOXICATION>
+                    <SPEEDING>4860.0</SPEEDING>
+                    <NO_DRIVER_LICENSE_AT_ALL>3700.0</NO_DRIVER_LICENSE_AT_ALL>
+                    <NOT_WEARING_SEATBELT>2040.0</NOT_WEARING_SEATBELT>
+                    <PARKING>1260.0</PARKING>
+                    <NO_LICENSE_PLATE>850.0</NO_LICENSE_PLATE>
+                  </items>
+                </lawViolations>         
+                """;
+        // For some reason 'expected' and 'actual' have got different line breakers (LF and CRLF).
+        // So for the test to be successful, I need to make a little change
+        expected = expected.replaceAll("\n", "\r\n");
+
+        Assertions.assertEquals(expected, actual);
+
     }
 }

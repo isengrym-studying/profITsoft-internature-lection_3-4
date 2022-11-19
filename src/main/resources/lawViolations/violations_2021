@@ -1,0 +1,39 @@
+[
+    {
+        "date_time": "2021-03-06T12:42:24",
+        "first_name": "Vadym",
+        "last_name": "Ivanov",
+        "type": "PARKING",
+        "fine_amount": 630.00
+    }, {
+        "date_time": "2021-04-010T12:00:03",
+        "first_name": "Vasyl",
+        "last_name": "Vasylenko",
+        "type": "NOT_WEARING_SEATBELT",
+        "fine_amount": 510.00
+    }, {
+        "date_time": "2021-05-20T15:24:45",
+        "first_name": "Taras",
+        "last_name": "Borysenko",
+        "type": "SPEEDING",
+        "fine_amount": 540.00
+    }, {
+        "date_time": "2021-07-23T14:45:16",
+        "first_name": "Olena",
+        "last_name": "Tkachuk",
+        "type": "NOT_WEARING_SEATBELT",
+        "fine_amount": 510.00
+    }, {
+        "date_time": "2021-10-23T10:10:23",
+        "first_name": "Svitlana",
+        "last_name": "Petrenko",
+        "type": "ALCOHOL_INTOXICATION",
+        "fine_amount": 17000.00
+    }, {
+        "date_time": "2021-12-31T22:46:46",
+        "first_name": "Bogdan",
+        "last_name": "Tkachenko",
+        "type": "NOT_WEARING_SEATBELT",
+        "fine_amount": 510.00
+    }
+]

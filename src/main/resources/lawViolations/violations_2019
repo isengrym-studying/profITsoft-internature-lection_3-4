@@ -1,0 +1,39 @@
+[
+  {
+    "date_time": "2019-02-05T11:45:23",
+    "first_name": "Ivan",
+    "last_name": "Ivanov",
+    "type": "SPEEDING",
+    "fine_amount": 540.00
+  }, {
+  "date_time": "2019-03-07T15:39:03",
+  "first_name": "Oleksii",
+  "last_name": "Vasylenko",
+  "type": "SPEEDING",
+  "fine_amount": 540.00
+}, {
+  "date_time": "2019-03-18T09:40:50",
+  "first_name": "Borys",
+  "last_name": "Borysenko",
+  "type": "SPEEDING",
+  "fine_amount": 540.00
+}, {
+  "date_time": "2019-08-25T17:51:01",
+  "first_name": "Volodymyr",
+  "last_name": "Tkachuk",
+  "type": "SPEEDING",
+  "fine_amount": 540.00
+}, {
+  "date_time": "2019-11-31T22:10:26",
+  "first_name": "Taras",
+  "last_name": "Petrenko",
+  "type": "SPEEDING",
+  "fine_amount": 540.00
+}, {
+  "date_time": "2019-12-31T23:45:56",
+  "first_name": "Ruslana",
+  "last_name": "Tkachenko",
+  "type": "SPEEDING",
+  "fine_amount": 540.00
+}
+]

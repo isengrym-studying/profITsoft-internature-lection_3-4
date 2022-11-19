@@ -1,0 +1,39 @@
+[
+    {
+        "date_time": "2020-02-05T11:45:23",
+        "first_name": "Ivan",
+        "last_name": "Ivanov",
+        "type": "SPEEDING",
+        "fine_amount": 540.00
+    }, {
+        "date_time": "2020-03-07T15:39:03",
+        "first_name": "Oleksii",
+        "last_name": "Vasylenko",
+        "type": "NOT_WEARING_SEATBELT",
+        "fine_amount": 510.00
+    }, {
+        "date_time": "2020-03-18T09:40:50",
+        "first_name": "Borys",
+        "last_name": "Borysenko",
+        "type": "PARKING",
+        "fine_amount": 630.00
+    }, {
+        "date_time": "2020-08-25T17:51:01",
+        "first_name": "Volodymyr",
+        "last_name": "Tkachuk",
+        "type": "NO_LICENSE_PLATE",
+        "fine_amount": 850.00
+    }, {
+        "date_time": "2020-11-31T22:10:26",
+        "first_name": "Taras",
+        "last_name": "Petrenko",
+        "type": "NO_DRIVER_LICENSE_AT_ALL",
+        "fine_amount": 3700.00
+    }, {
+        "date_time": "2020-12-31T23:45:56",
+        "first_name": "Ruslana",
+        "last_name": "Tkachenko",
+        "type": "SPEEDING",
+        "fine_amount": 540.00
+    }
+]
