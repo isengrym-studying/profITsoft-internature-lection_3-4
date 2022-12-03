@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ParsingUtils {
     public static void combineNameAndSurnameXml(String inputPath, String outputPath) {
@@ -64,29 +65,23 @@ public class ParsingUtils {
             throw new RuntimeException(e);
         }
     }
-    
+
     public static void generateLawViolationStatistics(String directoryPath, String statisticsFilePath) {
         ObjectMapper mapper = new ObjectMapper();
         XmlMapper xmlMapper = new XmlMapper();
+        Map<String,Double> result = new HashMap<>();
 
         File[] lawViolationFiles = getArrayOfFiles(directoryPath);
-        List<LawViolation> lawViolationList = readObjectsFromFileToList(mapper, lawViolationFiles);
-        Map<String, Double> resultingMap = collectToSortedMap(lawViolationList);
-        writeToXml(xmlMapper, statisticsFilePath, resultingMap);
+
+        for (File file : lawViolationFiles) {
+            List<LawViolation> lawViolationList = readObjectFromFileToList(mapper, file);
+            result = appendStats(result, lawViolationList);
+        }
+
+        result = sortByFineAmount(result);
+        writeToXml(xmlMapper, statisticsFilePath, result);
     }
 
-    private static Map<String, Double> collectToSortedMap(List<LawViolation> lawViolationList) {
-        return lawViolationList.stream()
-                .collect(Collectors.groupingBy(
-                        LawViolation::getType,
-                        Collectors.summingDouble(LawViolation::getFineAmount))
-                )
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue
-                        , (oldVal, newVal) -> oldVal, LinkedHashMap::new));
-    }
 
     private static File[] getArrayOfFiles(String directoryPath) {
         File violationsDirectory = new File(directoryPath);
@@ -96,20 +91,38 @@ public class ParsingUtils {
         });
     }
 
-    private static List<LawViolation> readObjectsFromFileToList(ObjectMapper mapper, File[] lawViolationFiles) {
+    private static List<LawViolation> readObjectFromFileToList(ObjectMapper mapper, File lawViolationFile) {
         List<LawViolation> lawViolationList = new ArrayList<>();
 
-        for (File lawViolationFile : lawViolationFiles) {
-            try (InputStream is = new FileInputStream(lawViolationFile.getPath())) {
-                List<LawViolation> partialLawViolationList = mapper.readValue(is.readAllBytes(), new TypeReference<>() {
-                });
-                lawViolationList.addAll(partialLawViolationList);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        try (InputStream is = new FileInputStream(lawViolationFile.getPath())) {
+            List<LawViolation> partialLawViolationList = mapper.readValue(is.readAllBytes(), new TypeReference<>() {});
+            lawViolationList.addAll(partialLawViolationList);
+        } catch (IOException e) {
+            throw new RuntimeException("Couldn't convert json to the LawViolation objects list", e);
         }
 
         return lawViolationList;
+    }
+
+    private static Map<String, Double> appendStats(Map<String,Double> map, List<LawViolation> lawViolationList) {
+        Map<String, Double> newData = lawViolationList.stream()
+                .collect(Collectors.groupingBy(
+                        LawViolation::getType,
+                        Collectors.summingDouble(LawViolation::getFineAmount))
+                );
+
+        return Stream
+                .concat(map.entrySet().stream(), newData.entrySet().stream())
+                .collect(Collectors.groupingBy(Map.Entry::getKey,
+                        Collectors.summingDouble(Map.Entry::getValue)));
+    }
+
+    private static Map<String, Double> sortByFineAmount(Map<String,Double> map) {
+        Map<String, Double> copiedMap = new HashMap<>(map);
+        return copiedMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldVal, newVal) -> oldVal, LinkedHashMap::new));
     }
 
     private static void writeToXml(XmlMapper xmlMapper, String statisticsFilePath, Map<String, Double> resultingMap) {
@@ -118,7 +131,7 @@ public class ParsingUtils {
             statisticsFile.createNewFile();
             xmlMapper.writerWithDefaultPrettyPrinter().writeValue(statisticsFile, new LawViolationsWrapper(resultingMap));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error writing results to the file", e);
         }
     }
 }
